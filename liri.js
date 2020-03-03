@@ -1,5 +1,6 @@
 // add code to read and set any environment variables with the dotenv package
-console.log("this is loaded")
+console.log("this is loaded");
+
 require("dotenv").config();
 var request = require("request");
 
@@ -18,7 +19,7 @@ var fs = require("fs");
 var theFunction = process.argv[2];
 //search
 var nodeArgs = process.argv;
-var search = "";
+var searchObj = "";
 
 // * `concert-this` * `spotify-this-song` * `movie-this` * `do-what-it-says`
 if (theFunction === "spotify-this-song") {
@@ -82,6 +83,74 @@ function spotify() {
         }
     )
 
+}
+
+//Bands in town
+function bands() {
+    for (var i = 3; i < nodeArgs.length; i++) {
+        if (i > 3 && i < nodeArgs.length) {
+            searchObj = searchObj = "+" + nodeArgs[i];
+        } else {
+            searchObj += nodeArgs[i];
+        }
+    }    
+    
+    var queryUrl = "https://rest.bandsintown.com/artists/" + searchObj + "/events?app_id=codingbootcamp";
+
+    request(queryUrl, function(error, response, body){
+        if (!error && response.statusCode === 200) {
+            var concertData = JSON.parse(body);
+        // venue location date
+            for(i = 0; i < concertData.length; i++) {
+                console.log("CONCERT INFO")
+                console.log("Venue: " + concertData[i].venue.name);
+                console.log("City: " + concertData[i].venue.city +
+                 ", " + concertData[i].venue.country);
+                 console.log("Date: " + SVGAnimateMotionElement
+                 (concertData[i].datetime).format("MM/DD/YY"));
+
+                 //if no events
+                console.log(searchObj + " had no upcoming events.")
+            }
+
+        }
+    });
+}
+
+//OMDB
+
+function movie() {
+var nodeArgs = process.argv;
+var theMovie = "";
+
+for (var i = 3; i < nodeArgs.length; i++) {
+    if (i > 3 && i < nodeArgs.length) {
+      theMovie = theMovie + "+" + nodeArgs[i];
+    } else {
+      theMovie += nodeArgs[i];
+    }
+  }
+// if no movie typed in
+  if (!process.argv[3]) {
+      theMovie = "Mr. Nobody";
+  }
+
+  var queryUrl = "http://www.omdbapi.com/?t=" + theMovie + "&y=&plot=short&apikey=trilogy";
+  request(queryUrl, function(error, response, body){
+    if (!error && response.statusCode === 200) {
+        var movieData = JSON.parse(body);
+// title year rating rotten tomatoes country language plot actors
+        console.log("MOVIE INFO")
+        console.log("Title: " + movieData.Title);
+        console.log("Released In: " + movieData.Year);
+        console.log("IMDB rating: " + movieData.imdbRating);
+        console.log("Rotten Tomatoes rating: " + movieData.Ratings[1].Value);
+        console.log("Country produced in: " + movieData.Country);
+        console.log("Language: " + movieData.Language);
+        console.log("Plot: " + movieData.Plot);
+        console.log("Actors: " + movieData.Actors);
+    }
+  });
 }
 
 
