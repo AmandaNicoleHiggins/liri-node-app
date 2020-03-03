@@ -7,6 +7,10 @@ var request = require("request");
 // Add the code required to import the `keys.js` file and store it in a variable.
 var keys = require("./keys.js");
 
+// Require moment
+var moment = require("moment");
+moment().format();
+
 //Spotify
 var Spotify = require("node-spotify-api");
 var Song = "";
@@ -19,7 +23,7 @@ var fs = require("fs");
 var theFunction = process.argv[2];
 //search
 var nodeArgs = process.argv;
-var searchObj = "";
+var artist = "";
 
 // * `concert-this` * `spotify-this-song` * `movie-this` * `do-what-it-says`
 if (theFunction === "spotify-this-song") {
@@ -35,7 +39,7 @@ if (theFunction === "movie-this") {
 }
 
 if (theFunction === "do-what-it-says") {
-    fs.readFile("random.text", "utf8", function (error, data) {
+    fs.readFile("random.txt", "utf8", function (error, data) {
         if (error) {
             return console.log(error);
         }
@@ -89,28 +93,26 @@ function spotify() {
 function bands() {
     for (var i = 3; i < nodeArgs.length; i++) {
         if (i > 3 && i < nodeArgs.length) {
-            searchObj = searchObj = "+" + nodeArgs[i];
+            artist = artist = "+" + nodeArgs[i];
         } else {
-            searchObj += nodeArgs[i];
+            artist += nodeArgs[i];
         }
     }    
     
-    var queryUrl = "https://rest.bandsintown.com/artists/" + searchObj + "/events?app_id=codingbootcamp";
+    var queryUrl = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
 
-    request(queryUrl, function(error, response, body){
+    request(queryUrl, function(error, response, body) {
         if (!error && response.statusCode === 200) {
             var concertData = JSON.parse(body);
         // venue location date
             for(i = 0; i < concertData.length; i++) {
-                console.log("CONCERT INFO")
+                console.log("CONCERT INFO");
                 console.log("Venue: " + concertData[i].venue.name);
-                console.log("City: " + concertData[i].venue.city +
-                 ", " + concertData[i].venue.country);
-                 console.log("Date: " + SVGAnimateMotionElement
-                 (concertData[i].datetime).format("MM/DD/YY"));
+                console.log("City: " + concertData[i].venue.city + ", " + concertData[i].venue.country);
+                 console.log("Date: " + moment(concertData[i].datetime).format("MM/DD/YY"));
 
                  //if no events
-                console.log(searchObj + " had no upcoming events.")
+                console.log(artist + " had no upcoming events.");
             }
 
         }
