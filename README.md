@@ -7,8 +7,8 @@ CONCERT THIS<br>
 MOVIE THIS<br>
 ![](images/movie-this.png)
 
-CONCERT THIS<br>
-![](images/concert-this.png)
+SPOTIFY THIS<br>
+![](images/spotify-this-song.png)
 
 DO WHAT IT SAYS<br>
 ![](images/do-what-it-says.png)
